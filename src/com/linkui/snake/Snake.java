@@ -7,12 +7,14 @@ public class Snake {
 	Node head;
 	Node tail;
 	int size;
+	Yard y;
 	
-	Snake (Direction dir){
+	Snake (Yard y, Direction dir){
 		Node n = new Node(20, 3, dir);
 		head = n;
 		tail = n;
 		size = 1;
+		this.y = y;
 	}
 	
 	public void addToTail(){
@@ -68,14 +70,43 @@ public class Snake {
 	
 	public void draw(Graphics g){
 		if(size<=0) return;
+		this.move();
 		for(Node n = head; n != null; n=n.next){
 			n.draw(g);
 		}
 	}
 	
+	/**
+	 *  This method is used to move the body of snake
+	 */
 	public void move(){
 		this.addToHead();
 		this.removeTail();
+		isDead();
+	}
+	
+	/**
+	 * This method is used to check if snake body collides with yard bounds or itself
+	 */
+	public void isDead(){
+		if(head.rows<0){
+			head.rows = Yard.ROWS;
+		}
+		if(head.cols<0){
+			head.cols = Yard.COLUMNS;
+		}
+		if(head.rows>Yard.ROWS){
+			head.rows = 0;
+		}
+		if(head.cols>Yard.COLUMNS){
+			head.cols = 0;
+		}
+		
+		for(Node n = head.next; n != null; n = n.next){
+			if(head.rows == n.rows && head.cols == n.cols){
+				y.stop();
+			}
+		}
 	}
 	
 	public Rectangle getRect(){
@@ -86,6 +117,7 @@ public class Snake {
 		if(this.getRect().intersects(e.getRect())){
 			e.reAppear();
 			this.addToHead();
+			y.updateScore();
 		}
 	}
 	
@@ -110,20 +142,28 @@ public class Snake {
 		}
 	}
 	
+	/**
+	 * Used to change snake direction (head direction) when key is pressed.
+	 * @param e KeyEvent from Yard class
+	 */
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
 		switch(key) {
 		case KeyEvent.VK_LEFT:
-			head.dir = Direction.L;
+			if(head.dir != Direction.R)
+				head.dir = Direction.L;
 			break;
 		case KeyEvent.VK_UP:
-			head.dir = Direction.U;
+			if(head.dir != Direction.D)
+				head.dir = Direction.U;
 			break;
 		case KeyEvent.VK_RIGHT:
-			head.dir = Direction.R;
+			if(head.dir != Direction.L)
+				head.dir = Direction.R;
 			break;
 		case KeyEvent.VK_DOWN:
-			head.dir = Direction.D;
+			if(head.dir != Direction.U)
+				head.dir = Direction.D;
 			break;
 		}
 	}

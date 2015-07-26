@@ -8,6 +8,7 @@ public class Egg {
 	int w = Yard.BLOCK_SIZE;
 	int h = Yard.BLOCK_SIZE;
 	private static Random r = new Random();
+	private Color eggC = Color.ORANGE;
 	
 	public Egg(int row, int col){
 		this.row = row;
@@ -15,19 +16,21 @@ public class Egg {
 	}
 	
 	public Egg(){
-		this(r.nextInt(Yard.ROWS), r.nextInt(Yard.COLUMNS));
+		this(r.nextInt(Yard.ROWS-2)+2, r.nextInt(Yard.COLUMNS-2)+2);
 	}
 	
 	public void draw(Graphics g){
 		Color c = g.getColor();
-		g.setColor(Color.ORANGE);
+		if(eggC == Color.ORANGE) eggC = Color.RED;
+		else eggC = Color.ORANGE;
+		g.setColor(eggC);
 		g.fillOval(col * Yard.BLOCK_SIZE, row * Yard.BLOCK_SIZE, w, h);
 		g.setColor(c);
 	}
 	
 	public void reAppear(){
-		this.row = r.nextInt(Yard.ROWS);
-		this.col = r.nextInt(Yard.COLUMNS);
+		this.row = r.nextInt(Yard.ROWS-2)+2;
+		this.col = r.nextInt(Yard.COLUMNS-2)+2;
 	}
 	
 	public Rectangle getRect(){
