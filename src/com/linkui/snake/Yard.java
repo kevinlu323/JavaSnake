@@ -9,7 +9,8 @@ public class Yard extends Frame{
 	public static final int BLOCK_SIZE = 10;
 	
 	//YardCanvas yc = new YardCanvas();
-	private Snake s = new Snake(Direction.L);
+	Image offScreenImage = null;
+	private Snake s = new Snake(Direction.R);
 	
 	public Yard(){
 		YardCanvas yc = new YardCanvas();
@@ -21,9 +22,12 @@ public class Yard extends Frame{
 				System.exit(0);
 			}	
 		});
+		this.addKeyListener(new KeyMonitor());
 	}
 	
 	public void launchYard(){
+		//new Thread(new PaintThread()).start();
+		s.addToHead();
 		s.addToHead();
 		this.setVisible(true);
 	}
@@ -31,6 +35,7 @@ public class Yard extends Frame{
 	private class YardCanvas extends Canvas{
 		YardCanvas(){
 			this.setSize(COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE);
+			new Thread(new PaintThread()).start();
 		}
 
 		public void paint(Graphics g) {
@@ -46,6 +51,37 @@ public class Yard extends Frame{
 			}
 			g.setColor(c);
 			s.draw(g);
+			s.move();
+		}
+		
+		/**
+		 * Override update() method to use double buffer to aoid blinking issue.
+		 */
+		public void update(Graphics g) {
+			if(offScreenImage == null){
+				offScreenImage = this.createImage(BLOCK_SIZE * COLUMNS, BLOCK_SIZE * ROWS);
+			}
+			Graphics gOff = offScreenImage.getGraphics();
+			paint(gOff);
+			g.drawImage(offScreenImage, 0, 0, null);
+		}
+		
+		private class PaintThread implements Runnable{
+			public void run(){
+				while (true){
+					repaint();
+					try{
+						Thread.sleep(100);
+					} catch (InterruptedException e){
+						e.printStackTrace();
+					}
+				}
+			}
+		}
+	}
+	private class KeyMonitor extends KeyAdapter{
+		public void keyPressed(KeyEvent e) {
+			s.keyPressed(e);
 		}
 	}
 	
