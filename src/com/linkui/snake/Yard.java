@@ -11,6 +11,7 @@ public class Yard extends Frame{
 	//YardCanvas yc = new YardCanvas();
 	Image offScreenImage = null;
 	private Snake s = new Snake(Direction.R);
+	private Egg e = new Egg();
 	
 	public Yard(){
 		YardCanvas yc = new YardCanvas();
@@ -51,7 +52,9 @@ public class Yard extends Frame{
 			}
 			g.setColor(c);
 			s.draw(g);
+			e.draw(g);
 			s.move();
+			s.eat(e);
 		}
 		
 		/**

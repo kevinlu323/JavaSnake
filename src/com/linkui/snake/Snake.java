@@ -78,6 +78,17 @@ public class Snake {
 		this.removeTail();
 	}
 	
+	public Rectangle getRect(){
+		return new Rectangle(head.cols * Yard.BLOCK_SIZE, head.rows * Yard.BLOCK_SIZE, head.w, head.h);
+	}
+	
+	public void eat(Egg e){
+		if(this.getRect().intersects(e.getRect())){
+			e.reAppear();
+			this.addToHead();
+		}
+	}
+	
 	private class Node{
 		int w = Yard.BLOCK_SIZE, h = Yard.BLOCK_SIZE;
 		int rows, cols;
