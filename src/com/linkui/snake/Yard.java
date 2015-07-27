@@ -5,7 +5,7 @@ import java.awt.event.*;
 
 public class Yard extends Frame{
 	public static final int ROWS = 30;
-	public static final int COLUMNS = 50;
+	public static final int COLUMNS = 40;
 	public static final int BLOCK_SIZE = 15;
 	
 	private boolean gameOver = false;
@@ -14,7 +14,6 @@ public class Yard extends Frame{
 	Image offScreenImage = null;
 	private Snake s = new Snake(this, Direction.R);
 	private Egg e = new Egg(this.s);
-	//YardCanvas yc = new YardCanvas();
 	
 	public Yard(){
 		YardCanvas yc = new YardCanvas();
@@ -44,6 +43,7 @@ public class Yard extends Frame{
 	
 	private class YardCanvas extends Canvas{
 		PaintThread pt = new PaintThread();
+		Font scoreFont = new Font("Consolas",Font.ITALIC,30);
 		
 		YardCanvas(){
 			this.setSize(COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE);
@@ -61,12 +61,14 @@ public class Yard extends Frame{
 			for(int i =1; i<COLUMNS; i++){
 				g.drawLine(i*BLOCK_SIZE, 0, i*BLOCK_SIZE, ROWS*BLOCK_SIZE);
 			}
+			g.setColor(Color.MAGENTA);
+			g.setFont(scoreFont);
 			g.drawString("Score: " + score, 10, 30);
 			if(gameOver){
-				Font f = new Font ("Harlow Solid",Font.BOLD,50);
+				Font f = new Font ("Harlow Solid",Font.ITALIC,50);
 				g.setFont(f);
 				g.setColor(Color.RED);
-				g.drawString("Game Over!", 225, 200);
+				g.drawString("Game Over!", 170, 200);
 				pt.gameOver();
 			}
 			g.setColor(c);

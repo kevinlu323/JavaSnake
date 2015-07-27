@@ -8,6 +8,7 @@ public class Snake {
 	Node tail;
 	int size;
 	Yard y;
+	private boolean keyFlag = true; // use this flag to avoid 2 keys pressed at the same time.
 	
 	Snake (Yard y, Direction dir){
 		Node n = new Node(20, 3, dir);
@@ -80,33 +81,36 @@ public class Snake {
 	 *  This method is used to move the body of snake
 	 */
 	public void move(){
+		if(isDead()) return;
 		this.addToHead();
 		this.removeTail();
-		isDead();
+		keyFlag = true;//do not allow keyEvent until snake make a move
 	}
 	
 	/**
 	 * This method is used to check if snake body collides with yard bounds or itself
 	 */
-	public void isDead(){
+	public boolean isDead(){
 		if(head.rows<0){
-			head.rows = Yard.ROWS;
+			head.rows = Yard.ROWS-1;
 		}
 		if(head.cols<0){
-			head.cols = Yard.COLUMNS;
+			head.cols = Yard.COLUMNS-1;
 		}
-		if(head.rows>Yard.ROWS){
+		if(head.rows>Yard.ROWS-1){
 			head.rows = 0;
 		}
-		if(head.cols>Yard.COLUMNS){
+		if(head.cols>Yard.COLUMNS-1){
 			head.cols = 0;
 		}
 		
 		for(Node n = head.next; n != null; n = n.next){
 			if(head.rows == n.rows && head.cols == n.cols){
 				y.stop();
+				return true;
 			}
 		}
+		return false;
 	}
 	
 	public boolean isInSnake(Egg e){
@@ -158,22 +162,31 @@ public class Snake {
 	 */
 	public void keyPressed(KeyEvent e) {
 		int key = e.getKeyCode();
+		if(!keyFlag) return; //If a key is pressed but snake doesn't move yet, will ignore next key press.
 		switch(key) {
 		case KeyEvent.VK_LEFT:
-			if(head.dir != Direction.R)
+			if(head.dir != Direction.R){
 				head.dir = Direction.L;
+				keyFlag = false;
+			}
 			break;
 		case KeyEvent.VK_UP:
-			if(head.dir != Direction.D)
+			if(head.dir != Direction.D){
 				head.dir = Direction.U;
+				keyFlag = false;
+			}
 			break;
 		case KeyEvent.VK_RIGHT:
-			if(head.dir != Direction.L)
+			if(head.dir != Direction.L){
 				head.dir = Direction.R;
+				keyFlag = false;
+			}
 			break;
 		case KeyEvent.VK_DOWN:
-			if(head.dir != Direction.U)
+			if(head.dir != Direction.U){
 				head.dir = Direction.D;
+				keyFlag = false;
+			}
 			break;
 		}
 	}
