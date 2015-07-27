@@ -3,19 +3,23 @@ package com.linkui.snake;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 
+import com.linkui.snake.Yard.YardCanvas;
+
 public class Snake {
 	Node head;
 	Node tail;
 	int size;
-	Yard y;
+	YardCanvas y;
 	private boolean keyFlag = true; // use this flag to avoid 2 keys pressed at the same time.
 	
-	Snake (Yard y, Direction dir){
+	Snake (YardCanvas y, Direction dir){
 		Node n = new Node(20, 3, dir);
 		head = n;
 		tail = n;
 		size = 1;
 		this.y = y;
+		this.addToTail();
+		this.addToTail();
 	}
 	
 	public void addToTail(){

@@ -8,15 +8,13 @@ public class Yard extends Frame{
 	public static final int COLUMNS = 40;
 	public static final int BLOCK_SIZE = 15;
 	
-	private boolean gameOver = false;
-	private int score = 0;
+
+	YardCanvas yc = new YardCanvas();
+	
 	
 	Image offScreenImage = null;
-	private Snake s = new Snake(this, Direction.R);
-	private Egg e = new Egg(this.s);
 	
 	public Yard(){
-		YardCanvas yc = new YardCanvas();
 		this.setLocation(600,300);
 		this.add(yc);
 		this.pack();
@@ -29,21 +27,18 @@ public class Yard extends Frame{
 	}
 	
 	public void launchYard(){
-		s.addToHead();
-		s.addToHead();
 		this.setVisible(true);
 	}
 	
-	public void updateScore(){
-		this.score += 5;
-	}
-	public void stop(){
-		gameOver = true;
-	}
-	
-	private class YardCanvas extends Canvas{
+	public class YardCanvas extends Canvas{
 		PaintThread pt = new PaintThread();
 		Font scoreFont = new Font("Consolas",Font.ITALIC,30);
+		
+		private Snake s = new Snake(this, Direction.R);
+		private Egg e = new Egg(this.s);
+		
+		private boolean gameOver = false;
+		private int score = 0;
 		
 		YardCanvas(){
 			this.setSize(COLUMNS * BLOCK_SIZE, ROWS * BLOCK_SIZE);
@@ -69,12 +64,13 @@ public class Yard extends Frame{
 				g.setFont(f);
 				g.setColor(Color.RED);
 				g.drawString("Game Over!", 170, 200);
+				g.drawString("Press F2 key to re-start", 30, 250);
 				pt.gameOver();
-			}
+			}	
 			g.setColor(c);
 			s.draw(g);
-			e.draw(g);
 			s.eat(e);
+			e.draw(g);
 		}
 		
 		/**
@@ -87,6 +83,29 @@ public class Yard extends Frame{
 			Graphics gOff = offScreenImage.getGraphics();
 			paint(gOff);
 			g.drawImage(offScreenImage, 0, 0, null);
+		}
+		
+		public void keyPressed(KeyEvent e){
+			int key = e.getKeyCode();
+			if(gameOver && key == KeyEvent.VK_F2){
+				this.reStart();
+			}
+			else s.keyPressed(e);
+		}
+		
+		public void updateScore(){
+			this.score += 5;
+		}
+		public void stop(){
+			gameOver = true;
+		}
+		
+		public void reStart(){
+			s = new Snake(this, Direction.R);
+			gameOver = false;
+			score = 0;
+			pt = new PaintThread();
+			pt.start();
 		}
 		
 		private class PaintThread extends Thread{
@@ -105,19 +124,12 @@ public class Yard extends Frame{
 			public void gameOver(){
 				flag = false;
 			}
-			
-			public void gameRestart(){
-				flag = true;
-			}
 		}
 	}
+	
 	private class KeyMonitor extends KeyAdapter{
 		public void keyPressed(KeyEvent e) {
-			/*int key = e.getKeyCode();
-			if (key == KeyEvent.VK_F2){
-				new Yard().launchYard();
-			}*/
-			s.keyPressed(e);
+			yc.keyPressed(e);
 		}
 	}
 	
