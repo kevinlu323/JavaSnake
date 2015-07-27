@@ -109,6 +109,15 @@ public class Snake {
 		}
 	}
 	
+	public boolean isInSnake(Egg e){
+		for(Node n = head; n != null; n = n.next){
+			if(n.rows == e.getRow() && n.cols == e.getCol()){
+				return true;
+			}
+		}
+		return false;
+	}
+	
 	public Rectangle getRect(){
 		return new Rectangle(head.cols * Yard.BLOCK_SIZE, head.rows * Yard.BLOCK_SIZE, head.w, head.h);
 	}
@@ -117,6 +126,7 @@ public class Snake {
 		if(this.getRect().intersects(e.getRect())){
 			e.reAppear();
 			this.addToHead();
+			this.addToTail();
 			y.updateScore();
 		}
 	}

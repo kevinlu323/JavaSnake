@@ -13,7 +13,7 @@ public class Yard extends Frame{
 	
 	Image offScreenImage = null;
 	private Snake s = new Snake(this, Direction.R);
-	private Egg e = new Egg();
+	private Egg e = new Egg(this.s);
 	//YardCanvas yc = new YardCanvas();
 	
 	public Yard(){
