@@ -41,6 +41,7 @@ public class Snake {
 		tail.next = n;
 		n.prev = tail;
 		tail = n;
+		tail.next = null;
 		size++;
 	}
 	
@@ -63,6 +64,7 @@ public class Snake {
 		n.next = head;
 		head.prev = n;
 		head = n;
+		head.prev = null;
 		size++;
 	}
 	
@@ -118,8 +120,10 @@ public class Snake {
 	}
 	
 	public boolean isInSnake(Egg e){
-		for(Node n = head; n != null; n = n.next){
-			if(n.rows == e.getRow() && n.cols == e.getCol()){
+		int eggRow = e.getRow();
+		int eggCol = e.getCol();
+		for(Node n = head; n != tail; n = n.next){
+			if(eggRow == n.rows && eggCol == n.cols){
 				return true;
 			}
 		}
@@ -131,10 +135,10 @@ public class Snake {
 	}
 	
 	public void eat(Egg e){
-		if(this.getRect().intersects(e.getRect())){
-			e.reAppear();
+		if(this.getRect().intersects(e.getRect())){		
 			this.addToHead();
 			this.addToTail();
+			e.reAppear();
 			y.updateScore();
 		}
 	}
@@ -191,6 +195,9 @@ public class Snake {
 				head.dir = Direction.D;
 				keyFlag = false;
 			}
+			break;
+		case KeyEvent.VK_Z:
+			int i = 1;
 			break;
 		}
 	}
