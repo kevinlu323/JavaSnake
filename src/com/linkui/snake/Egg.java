@@ -34,10 +34,11 @@ public class Egg {
 	 * Method to generate next egg, also needs to check to avoid egg generated in the snake.
 	 */
 	public void reAppear(){
-		this.row = r.nextInt(Yard.ROWS-2-25)+2;
-		this.col = r.nextInt(Yard.COLUMNS-2-35)+2;
-		if(s.isInSnake(this)) 
+		this.row = r.nextInt(Yard.ROWS-2)+2;
+		this.col = r.nextInt(Yard.COLUMNS-2)+2;
+		if(s.isInSnake(this)){ 
 			this.reAppear();
+		}
 	}
 	
 	public Rectangle getRect(){

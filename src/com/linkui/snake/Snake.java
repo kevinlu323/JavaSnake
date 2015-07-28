@@ -122,7 +122,7 @@ public class Snake {
 	public boolean isInSnake(Egg e){
 		int eggRow = e.getRow();
 		int eggCol = e.getCol();
-		for(Node n = head; n != tail; n = n.next){
+		for(Node n = head; n != null; n = n.next){
 			if(eggRow == n.rows && eggCol == n.cols){
 				return true;
 			}
